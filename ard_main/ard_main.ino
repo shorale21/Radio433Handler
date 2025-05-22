@@ -1,6 +1,7 @@
 #include "custom_clocking.h"
 #include "rf_handler.h"
 #include "soil_packet.h"
+#include <Arduino.h>
 
 uint16_t desired_freq = 20; // hertz
 uint16_t prescl = 8;
