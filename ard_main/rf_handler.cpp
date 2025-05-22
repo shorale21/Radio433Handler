@@ -13,6 +13,7 @@ uint8_t receiving = 0; //set when a message is receiving
 bool posedge = false;
 int outpin = 0;
 int inpin = 0;
+bool sending = false;
 
 
 void exti_handle() //handle external interrupts
@@ -21,8 +22,11 @@ void exti_handle() //handle external interrupts
 	{
 		Serial.println("r");
 	}
-	pulse = 1; //recieved a pulse
-	receiving = 1; //currently recieving a message
+	if(!sending)
+	{
+		pulse = 1; //recieved a pulse
+		receiving = 1; //currently recieving a message
+	}
 	EIFR |= 1; //reset interrupt mask
 }
 
@@ -71,6 +75,7 @@ void timer_handler() //handle the clock
 			{
 				out_pos = 31; //reset values after message is sent
 				out_msg = 0; //remove message
+				sending = false;
 			}
 			else
 			{
@@ -91,6 +96,7 @@ void send_message(uint32_t message) //send a message, set the out_msg to the des
 	{
 		out_msg = message;
 		out_pos = 31;
+		sending = true;
 		// Serial.print("Sending Message: ");
 		// Serial.println(out_msg & MSG_BIT);
 	}
